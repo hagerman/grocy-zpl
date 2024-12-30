@@ -20,8 +20,11 @@ RUN apk --no-cache add ca-certificates
 
 WORKDIR /root/
 
-# Copy the pre-built binary file from the previous stage
+# Copy the built binary from the builder stage
 COPY --from=builder /app/main .
+
+# Copy any .zpl files from the project directory to the output directory
+COPY --from=builder /app/*.zpl .
 
 EXPOSE 8000
 
