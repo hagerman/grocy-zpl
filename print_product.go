@@ -47,9 +47,11 @@ func (app *application) printProductHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	log.Printf("Successfully printed: %+v\n", product)
+
 	// Respond with a success message
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Product printed successfully"))
+	_, _ = w.Write([]byte("Product printed successfully"))
 }
 
 func (app *application) printProduct(product Product) error {
