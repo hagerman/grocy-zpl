@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-push:
-    runs-on: golang:1.23-alpine
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
