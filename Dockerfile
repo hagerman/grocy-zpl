@@ -12,7 +12,7 @@ RUN go mod download
 COPY . .
 
 # Build app
-RUN go build -a -installsuffix cgo -o main .
+RUN go build -o main .
 
 FROM alpine:latest
 
