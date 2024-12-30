@@ -9,7 +9,7 @@ COPY . .
 RUN apk add --no-cache gcc musl-dev libc6-compat
 
 # Build the application
-RUN CGO_ENABLED=1 GOOS=linux go build -o main
+RUN CGO_ENABLED=0 GOOS=linux go build -o main
 
 # Deploy-Stage
 FROM alpine:3.20.2
