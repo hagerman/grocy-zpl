@@ -1,28 +1,28 @@
 # Build-Stage
-FROM golang:1.23-alpine AS build
-WORKDIR /app
+FROM golang:1.23-alpine AS builder
 
-# Copy the source code
+# Set Environment Variables
+ENV HOME /app
+ENV CGO_ENABLED 0
+ENV GOOS linux
+
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
 COPY . .
 
-# Install build dependencies
-RUN apk add --no-cache gcc musl-dev libc6-compat
+# Build app
+RUN go build -a -installsuffix cgo -o main .
 
-# Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -o main
+FROM alpine:latest
 
-# Deploy-Stage
-FROM alpine:3.20.2
-WORKDIR /app
+RUN apk --no-cache add ca-certificates
 
-# Set environment variable for runtime
-ENV GO_ENV=production
+WORKDIR /root/
 
-# Copy the binary from the build stage
-COPY --from=build /app/main .
+# Copy the pre-built binary file from the previous stage
+COPY --from=builder /app/main .
 
-# Expose the port your application runs on
-EXPOSE 8000
+EXPOSE 8080
 
-# Command to run the application
-CMD ["./main"]
+CMD [ "./main" ]
