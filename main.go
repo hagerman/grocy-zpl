@@ -26,7 +26,7 @@ func main() {
 	http.HandleFunc("/print/product", app.printProductHandler)
 
 	addr := fmt.Sprintf(":%s", port)
-	log.Printf("Starting server on port %s...", port)
+	log.Printf("Starting server on port %s. Printing to URL %s...", port, printerURL)
 	err := http.ListenAndServe(addr, nil)
 	if err != nil {
 		log.Fatalf("Could not start server: %s\n", err)

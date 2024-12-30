@@ -40,9 +40,6 @@ func (app *application) printProductHandler(w http.ResponseWriter, r *http.Reque
 		}
 	}
 
-	// Print the received product to the console
-	log.Printf("Received product: %+v\n", product)
-
 	log.Printf("Printing product: %+v\n", product)
 	err = app.printProduct(product)
 	if err != nil {
