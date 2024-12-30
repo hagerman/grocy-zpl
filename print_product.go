@@ -108,7 +108,10 @@ func (app *application) printProduct(product Product) error {
 	if err != nil {
 		return fmt.Errorf("Failed to send request: %v", err)
 	}
-	defer resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		return fmt.Errorf("Failed to close response body: %v", err)
+	}
 
 	// Check the response status
 	if resp.StatusCode != http.StatusOK {
