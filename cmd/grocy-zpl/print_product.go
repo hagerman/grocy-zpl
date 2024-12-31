@@ -8,6 +8,8 @@ import (
 	"github.com/hagerman/grocy-zpl/internal/funcs"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"text/template"
 	"time"
 )
@@ -44,6 +46,7 @@ func (app *application) printProductHandler(w http.ResponseWriter, r *http.Reque
 	log.Printf("Printing product: %+v\n", product)
 	err = app.printProduct(product)
 	if err != nil {
+		log.Printf("Error printing product: %+v\n", err)
 		http.Error(w, fmt.Sprintf("Error printing product: %+v\n", err), http.StatusBadRequest)
 		return
 	}
@@ -56,12 +59,21 @@ func (app *application) printProductHandler(w http.ResponseWriter, r *http.Reque
 }
 
 func (app *application) printProduct(product Product) error {
+	// Get the current working directory
+	cwd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	// Construct the path to the file in the root directory
+	templatePath := filepath.Join(cwd, app.templatePath)
+
 	// Parse the template
-	tmpl := template.Must(template.New(app.templatePath).Funcs(funcs.TemplateFuncs).ParseFiles(app.templatePath))
+	tmpl := template.Must(template.New("").Funcs(funcs.TemplateFuncs).ParseFiles(templatePath))
 
 	// Replace contents using the template
 	var fileData bytes.Buffer
-	err := tmpl.ExecuteTemplate(&fileData, app.templatePath, product)
+	err = tmpl.ExecuteTemplate(&fileData, filepath.Base(templatePath), product)
 	if err != nil {
 		return err
 	}

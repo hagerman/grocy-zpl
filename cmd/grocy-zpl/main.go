@@ -18,7 +18,7 @@ func main() {
 	// Get the port from the environment variable or use the default value
 	port := getEnv("PORT", "8000")
 	printerURL := getEnv("PRINTER_URL", "http://1.1.1.1:631/ipp/print")
-	templatePath := getEnv("TEMPLATE_PATH", "template.zpl")
+	templatePath := getEnv("TEMPLATE_PATH", "assets/templates/product.zpl")
 	grocyAPIURL := getEnv("GROCY_API_URL", "")
 	grocyAPIKey := getEnv("GROCY_API_KEY", "")
 
