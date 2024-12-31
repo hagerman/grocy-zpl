@@ -12,7 +12,7 @@ RUN go mod download
 COPY . .
 
 # Build app
-RUN go build -o main .
+RUN go build ./cmd/grocy-zpl
 
 FROM alpine:latest
 
@@ -21,11 +21,11 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 
 # Copy the built binary from the builder stage
-COPY --from=builder /app/main .
+COPY --from=builder /app/grocy-zpl .
 
 # Copy any .zpl files from the project directory to the output directory
 COPY --from=builder /app/*.zpl .
 
 EXPOSE 8000
 
-CMD [ "./main" ]
+CMD [ "./grocy-zpl" ]

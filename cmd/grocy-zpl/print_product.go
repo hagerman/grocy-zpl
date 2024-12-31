@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/OpenPrinting/goipp"
+	"github.com/hagerman/grocy-zpl/internal/funcs"
 	"log"
 	"net/http"
 	"text/template"
@@ -56,7 +57,7 @@ func (app *application) printProductHandler(w http.ResponseWriter, r *http.Reque
 
 func (app *application) printProduct(product Product) error {
 	// Parse the template
-	tmpl := template.Must(template.New(app.templatePath).Funcs(TemplateFuncs).ParseFiles(app.templatePath))
+	tmpl := template.Must(template.New(app.templatePath).Funcs(funcs.TemplateFuncs).ParseFiles(app.templatePath))
 
 	// Replace contents using the template
 	var fileData bytes.Buffer

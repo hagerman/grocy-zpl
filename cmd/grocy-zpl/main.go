@@ -10,6 +10,8 @@ import (
 type application struct {
 	printerURL   string
 	templatePath string
+	grocyAPIURL  string
+	grocyAPIKey  string
 }
 
 func main() {
@@ -17,10 +19,14 @@ func main() {
 	port := getEnv("PORT", "8000")
 	printerURL := getEnv("PRINTER_URL", "http://1.1.1.1:631/ipp/print")
 	templatePath := getEnv("TEMPLATE_PATH", "template.zpl")
+	grocyAPIURL := getEnv("GROCY_API_URL", "")
+	grocyAPIKey := getEnv("GROCY_API_KEY", "")
 
 	app := &application{
 		printerURL:   printerURL,
 		templatePath: templatePath,
+		grocyAPIURL:  grocyAPIURL,
+		grocyAPIKey:  grocyAPIKey,
 	}
 
 	http.HandleFunc("/print/product", app.printProductHandler)
