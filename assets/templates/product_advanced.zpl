@@ -86,7 +86,7 @@
     ^FO150,150^FD{{index .ServiceCall.ProductGroupUserFields "product_group_print_name"}}^FS
 
     ^FWI
-    {{ if lt (len .Webhook.Name) 30 }}
+    {{ if lt (len $productName) 20 }}
         ^CF0,60
         ^FB600,1
         ^FO460,1130^FD{{uppercase $productName}}^FS
