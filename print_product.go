@@ -56,14 +56,11 @@ func (app *application) printProductHandler(w http.ResponseWriter, r *http.Reque
 
 func (app *application) printProduct(product Product) error {
 	// Parse the template
-	tmpl, err := template.ParseFiles(app.templatePath)
-	if err != nil {
-		return err
-	}
+	tmpl := template.Must(template.New(app.templatePath).Funcs(TemplateFuncs).ParseFiles(app.templatePath))
 
 	// Replace contents using the template
 	var fileData bytes.Buffer
-	err = tmpl.ExecuteTemplate(&fileData, app.templatePath, product)
+	err := tmpl.ExecuteTemplate(&fileData, app.templatePath, product)
 	if err != nil {
 		return err
 	}
