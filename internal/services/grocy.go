@@ -33,8 +33,8 @@ type ProductResponse struct {
 		Amount    int      `json:"amount"`
 		LastPrice *float64 `json:"last_price"`
 	} `json:"product_barcodes"`
-	StockAmount int `json:"stock_amount"`
-	StockValue  int `json:"stock_value"`
+	StockAmount int     `json:"stock_amount"`
+	StockValue  float64 `json:"stock_value"`
 	Location    struct {
 		ID        int    `json:"id"`
 		Name      string `json:"name"`
