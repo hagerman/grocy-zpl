@@ -15,7 +15,7 @@
 ^LT0
 ^LS0
 
-{{ if eq .MediaReady "na_index-2.25x1_2.25x1in" }}
+{{ if eq .MediaReady "na_label_2.25x1in" }}
 
     {{ if lt (len $productName) 30 }}
 
