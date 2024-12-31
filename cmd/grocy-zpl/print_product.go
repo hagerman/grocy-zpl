@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/OpenPrinting/goipp"
 	"github.com/hagerman/grocy-zpl/internal/funcs"
+	"github.com/hagerman/grocy-zpl/internal/services"
 	"log"
 	"net/http"
 	"os"
@@ -14,12 +15,18 @@ import (
 	"time"
 )
 
-// Product represents the expected JSON payload structure
-type Product struct {
+// ProductWebhook represents the expected JSON payload structure
+type ProductWebhook struct {
 	Name       string `json:"product"`
 	Barcode    string `json:"grocycode"`
 	DueDateRaw string `json:"due_date"`
 	DueDate    time.Time
+}
+
+type Product struct {
+	Webhook     ProductWebhook
+	ServiceCall services.ProductResponse
+	MediaReady  string
 }
 
 // handler for POST requests to /print/product
@@ -29,21 +36,42 @@ func (app *application) printProductHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	var product Product
-	err := json.NewDecoder(r.Body).Decode(&product)
+	var webhook ProductWebhook
+	err := json.NewDecoder(r.Body).Decode(&webhook)
 	if err != nil {
 		http.Error(w, "Invalid JSON payload", http.StatusBadRequest)
 		return
 	}
 
-	if product.DueDateRaw != "" {
-		d, err := time.Parse("DD: 2006-01-02", product.DueDateRaw)
+	if webhook.DueDateRaw != "" {
+		d, err := time.Parse("DD: 2006-01-02", webhook.DueDateRaw)
 		if err == nil { // Note this is backwards, if no error, we want to persist the value
-			product.DueDate = d
+			webhook.DueDate = d
 		}
 	}
 
-	log.Printf("Printing product: %+v\n", product)
+	var serviceCall services.ProductResponse
+	var mediaReady string
+	if app.grocyAPIURL != "" {
+		serviceCall, err = services.GetProductByBarcode(app.grocyAPIURL, app.grocyAPIKey, webhook.Barcode)
+		if err != nil {
+			http.Error(w, "Unable to get product by barcode", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	mediaReady, err = getMediaReadyAttr(app.printerURL)
+	if err != nil {
+		http.Error(w, "Unable to get media-ready attribute from printer", http.StatusInternalServerError)
+	}
+
+	product := Product{
+		Webhook:     webhook,
+		ServiceCall: serviceCall,
+		MediaReady:  mediaReady,
+	}
+
+	log.Printf("Printing product: %+v\n", webhook)
 	err = app.printProduct(product)
 	if err != nil {
 		log.Printf("Error printing product: %+v\n", err)
@@ -51,11 +79,11 @@ func (app *application) printProductHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	log.Printf("Successfully printed: %+v\n", product)
+	log.Printf("Successfully printed: %+v\n", webhook)
 
 	// Respond with a success message
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte("Product printed successfully"))
+	w.Write([]byte("Product printed successfully"))
 }
 
 func (app *application) printProduct(product Product) error {

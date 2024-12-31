@@ -29,7 +29,8 @@ var TemplateFuncs = template.FuncMap{
 	"pluralize": pluralize,
 
 	// Slice functions
-	"join": strings.Join,
+	"join":  strings.Join,
+	"split": strings.Split,
 
 	// Number functions
 	"incr":        incr,
