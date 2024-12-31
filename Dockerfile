@@ -24,7 +24,7 @@ WORKDIR /root/
 COPY --from=builder /app/grocy-zpl .
 
 # Copy the contents of /app/assets preserving the directory structure
-COPY --from=builder /app/assets .
+COPY --from=builder /app/assets ./assets/
 
 EXPOSE 8000
 
