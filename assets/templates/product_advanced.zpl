@@ -1,10 +1,7 @@
 ^XA
 
-{{ $productName := .Webhook.Name }}
 {{ $printProductName := index .ServiceCall.ProductUserFields "product_print_name" }}
-{{ if gt (len $printProductName) 0 }}
-    {{ $productName = $printProductName }}
-{{ end }}
+{{ $productName := or $printProductName .Webhook.Name }}
 {{ $extras := split (index .ServiceCall.ProductUserFields "product_print_attributes") "," }}
 
 ^FX - encoding (28 = UTF-8)
