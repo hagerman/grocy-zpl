@@ -23,8 +23,8 @@ WORKDIR /root/
 # Copy the built binary from the builder stage
 COPY --from=builder /app/grocy-zpl .
 
-# Copy the contents of /app/assets to /root, preserving the directory structure
-COPY /app/assets/ /root/
+# Copy the contents of /app/assets preserving the directory structure
+COPY --from=builder /app/assets/ .
 
 EXPOSE 8000
 
