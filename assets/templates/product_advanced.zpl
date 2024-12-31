@@ -2,7 +2,8 @@
 
 {{ $printProductName := index .ServiceCall.ProductUserFields "product_print_name" }}
 {{ $productName := or $printProductName .Webhook.Name }}
-{{ $extras := split (index .ServiceCall.ProductUserFields "product_print_attributes") "," }}
+{{ $extras := or (index .ServiceCall.ProductUserFields "product_print_attributes") "" }}
+{{ if ne $extras "" }}{{$extras = split $extras ","}}{{ end }}
 
 ^FX - encoding (28 = UTF-8)
 ^CI28
