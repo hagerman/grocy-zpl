@@ -67,7 +67,7 @@
     {{ if gt (len $extras) 0 }}
 
         ^CFE,50
-        ^FO250,150^FB800,1^FD{{ index $extras 0 }}{{ if gt (len $extras) 0 }} / {{ index $extras 1 }} {{ end }}^FS
+        ^FO250,150^FB800,1^FD{{ index $extras 0 }}{{ if gt (len $extras) 1 }} / {{ index $extras 1 }} {{ end }}^FS
         ^FO225,150
         ^GB0,700,3,B^FS
 
