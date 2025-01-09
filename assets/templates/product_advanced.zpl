@@ -4,6 +4,7 @@
 {{ $productName := or $printProductName .Webhook.Name }}
 {{ $extras := or (index .ServiceCall.ProductUserFields "product_print_attributes") "" }}
 {{ if ne $extras "" }}{{$extras = split $extras ","}}{{ end }}
+{{ $type := or (index .ServiceCall.ProductUserFields "products_small_label") "" }}
 
 ^FX - encoding (28 = UTF-8)
 ^CI28
@@ -107,6 +108,46 @@
     {{ end }}
 
     ^BY2,2,64^FO300,1540^BCN,96,N^FD{{.Webhook.Barcode}}^FS
+
+{{ else if eq .MediaReady "na_label_2.25x4in" }}
+    ^FWR
+
+    ^CF0,70
+    ^FO300,50
+    ^FB500,4^FD{{uppercase $productName}}^FS
+
+    ^CF0,40
+    ^FO60,50^FD{{$type}}^FS
+
+
+    ^CF0,40
+    ^FO60,735^FD{{$type}}^FS
+
+
+    ^FWI
+
+
+    {{ if lt (len $productName) 14 }}
+        ^CF0,55
+        ^FB400,2
+        ^FO200,705^FD{{uppercase $productName}}^FS
+    {{ else }}
+        ^CF0,55
+        ^FB400,2
+        ^FO200,730^FD{{uppercase $productName}}^FS
+    {{ end }}
+
+
+
+    ^BY2,2,64^FO50,1075^BCN,96,N^FD{{.Webhook.Barcode}}^FS
+
+    {{ if afterEpoch .Webhook.DueDate }}
+
+        ^FB600,1,0
+        ^CF0,25
+        ^FO50,1040^FDExp {{.Webhook.DueDate.Format "2006-01-02"}}^FS
+
+    {{ end }}
 
 {{ end }}
 
