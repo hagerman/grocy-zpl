@@ -121,7 +121,8 @@
 
 
     ^CF0,40
-    ^FO60,735^FD{{$type}}^FS
+    ^FB220,1,0,C
+    ^FO60,670^FD{{$type}}^FS
 
 
     ^FWI
