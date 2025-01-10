@@ -4,15 +4,16 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/OpenPrinting/goipp"
-	"github.com/hagerman/grocy-zpl/internal/funcs"
-	"github.com/hagerman/grocy-zpl/internal/services"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"text/template"
 	"time"
+
+	"github.com/OpenPrinting/goipp"
+	"github.com/hagerman/grocy-zpl/internal/funcs"
+	"github.com/hagerman/grocy-zpl/internal/services"
 )
 
 // ProductWebhook represents the expected JSON payload structure
@@ -128,7 +129,7 @@ func (app *application) printProduct(product Product) error {
 	var buffer bytes.Buffer
 	err = req.Encode(&buffer)
 	if err != nil {
-		return fmt.Errorf("Failed to encode IPP request: %v", err)
+		return fmt.Errorf("failed to encode IPP request: %v", err)
 	}
 
 	// Append the ZPL data to the buffer
@@ -137,23 +138,23 @@ func (app *application) printProduct(product Product) error {
 	// Send the IPP request to the printer using HTTP
 	httpReq, err := http.NewRequest("POST", app.printerURL, &buffer)
 	if err != nil {
-		return fmt.Errorf("Failed to create request: %v", err)
+		return fmt.Errorf("failed to create request: %v", err)
 	}
 	httpReq.Header.Set("Content-Type", "application/ipp")
 
 	client := &http.Client{}
 	resp, err := client.Do(httpReq)
 	if err != nil {
-		return fmt.Errorf("Failed to send request: %v", err)
+		return fmt.Errorf("failed to send request: %v", err)
 	}
 	err = resp.Body.Close()
 	if err != nil {
-		return fmt.Errorf("Failed to close response body: %v", err)
+		return fmt.Errorf("failed to close response body: %v", err)
 	}
 
 	// Check the response status
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("Failed to send request, received %s", resp.Status)
+		return fmt.Errorf("failed to send request, received %s", resp.Status)
 	}
 
 	log.Printf("ZPL job submitted successfully!")
