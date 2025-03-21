@@ -155,13 +155,13 @@
 {{ if eq .MediaReady "na_label_2x2in" }}
 
     ^CF0,70
-    ^FO40,150
-    ^A0,48^FB530,2,0,C^FD{{$productName}}\&^FS
+    ^FO80,150
+    ^A0,48^FB450,2,0,C^FD{{$productName}}\&^FS
 
     ^FX - field for the element 'Barcode'
-    ^FO24,268,2
+    ^FO160,268,2
     ^FWN
-    ^BY2,2,64
+    ^BY1,2,64
     ^BCN,96,N,N^FD{{.Webhook.Barcode}}^FS
 
     {{ if afterEpoch .Webhook.DueDate }}
